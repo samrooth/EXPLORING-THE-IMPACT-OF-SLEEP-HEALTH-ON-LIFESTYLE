@@ -1,0 +1,325 @@
+---
+title: "project report"
+author: "samrooth"
+date: "2023-08-21"
+output: html_document
+---
+
+## DATA PREPROCESSING
+## bfr preprcng- with all vrbls
+```{r}
+data=read.csv("Sleep_health_and_lifestyle_dataset.csv")
+data
+```
+```{r}
+str(data)
+```
+```{r}
+library(tidyverse)
+```
+
+```{r}
+s1 <- select(data,-(Daily.Steps),-(BMI.Category),-(Blood.Pressure),-(Heart.Rate))
+s1
+```
+```{r}
+data1= write.csv(s1,file="sleep_health_new.csv",row.names = F)
+```
+
+## aftr prprcng - with only 9 variables
+```{r}
+data2=read.csv("sleep_health_new.csv")
+data2
+```
+```{r}
+str(data2)
+```
+```{r}
+data2$Gender <- as.factor(data2$Gender)
+data2$Age <- as.numeric(data2$Age)
+data2$Occupation  <- as.factor(data2$Occupation)
+data2$Quality.of.Sleep <- as.factor(data2$Quality.of.Sleep)
+data2$Physical.Activity.Level <- as.numeric(data2$Physical.Activity.Level)
+data2$Stress.Level  <- as.factor(data2$Stress.Level)
+data2$Sleep.Disorder   <- as.factor(data2$Sleep.Disorder)
+
+```
+
+
+```{r}
+str(data2)
+```
+```{r}
+sum(is.na(data2))
+```
+```{r}
+count(data2)
+```
+
+## DESCRIPTIVE STATISTIC
+```{r}
+summary(data2)
+```
+
+
+## DATA VISUALIZATION
+
+```{r}
+library(ggplot2)
+```
+
+## CATERGORICAL 
+## gender-bargraph
+```{r}
+ggplot(data=data2)+geom_bar(mapping=aes(x=Gender ,fill=Gender))+
+labs(title="Gender Count",x="Gender ",y="Count")+theme_classic()
+```
+
+```{r}
+chart_data <- data.frame(gender = names(gender_counts), count = gender_counts)
+chart_data
+```
+
+## gender- pie chart
+```{r}
+gender.count = table(data2$Gender)
+pie(gender.count, col = c("Red","Green"), main = "Gender Distribution")
+```
+
+## 0ccupation-bar graph
+```{r}
+ggplot(data=data2)+geom_bar(mapping=aes(x=Occupation ,fill=Occupation))+
+labs(title="Job position frequency",x="Job position",y="Frequency")+theme_classic()
+```
+```{r}
+chart_data <- data.frame(occupation = names(occupation_counts), count = occupation_counts)
+chart_data
+```
+## occupation- pie chart
+```{r}
+occupation.count = table(data2$Occupation)
+pie(occupation.count, col = c("Red","Green","Blue","Black","light green","Yellow","Brown","Purple","light blue","Orange","Pink"), main = "Pie chart of Occupation")
+```
+
+## quality of sleep-bar graph
+
+```{r}
+Quality.of.Sleep_counts <- table(data2$Quality.of.Sleep)
+chart_data <- data.frame(Quality.of.Sleep = names(Quality.of.Sleep_counts), count = Quality.of.Sleep_counts)
+chart_data
+```
+```{r}
+ggplot(data=data2)+geom_bar(mapping=aes(x=Quality.of.Sleep ,fill=Quality.of.Sleep))+
+labs(title="Quality of sleep Frequency",x="Quality.of.Sleep",y="Frequency")+theme_classic()
+```
+## stress level- bar graph
+```{r}
+Stress.Level_counts <- table(data2$Stress.Level)
+chart_data <- data.frame(Stress.Level = names(Stress.Level_counts), count = Stress.Level_counts)
+chart_data
+```
+```{r}
+ggplot(data=data2)+geom_bar(mapping=aes(x=Stress.Level,fill=Stress.Level ))+
+labs(title="Stress.Level Frequency",x="Stress.Level ",y="Frequency")+theme_classic()
+```
+## sleep disorder-bar graph
+```{r}
+ggplot(data=data2)+geom_bar(mapping=aes(x=Sleep.Disorder,fill=Sleep.Disorder ))+
+labs(title="Sleep disorder Frequency",x="Sleep disorder ",y="Frequency")+theme_classic()
+```
+```{r}
+Sleep.disorder_counts <- table(data2$Sleep.Disorder)
+chart_data <- data.frame(Sleep.Disorder = names(Sleep.disorder_counts), count = Sleep.disorder_counts)
+chart_data
+```
+## sleep disorder- pie chart
+```{r}
+sleep_disorder.count = table(data2$Sleep.Disorder )
+pie(sleep_disorder.count, col = c("Red","Green","Blue"), main = "Pie chart for Sleep disorder")
+```
+## gender-occupation
+
+```{r}
+ggplot(data=data2)+geom_bar(mapping=aes(x=Occupation ,fill=Gender),position="dodge")+
+labs(title="Job positions by Gender",x="Job position",y="Count")+theme_minimal()
+```
+```{r}
+gender_occupation_table=table(data2$Gender,data2$Occupation)
+table2<- as.data.frame(gender_occupation_table)
+colnames(table2)<- c("Gender","Occupation","Count")
+table2
+```
+##occupation-sleep disorder
+
+```{r}
+ggplot(data=data2)+geom_bar(mapping=aes(x=Occupation ,fill=Sleep.Disorder),position="dodge")+
+labs(title="Job positions with Sleep disorder",x="Job position",y="Count")+theme_minimal()
+```
+```{r}
+sleep.disorder_occupation_table=table(data2$Sleep.Disorder,data2$Occupation)
+table2<- as.data.frame(sleep.disorder_occupation_table)
+colnames(table2)<- c("Sleep.Disorder","Occupation","Count")
+table2
+```
+##gender-sleep disorder
+
+```{r}
+ggplot(data=data2)+geom_bar(mapping=aes(x=Gender ,fill=Sleep.Disorder),position="dodge")+
+labs(title="Gender with Sleep disorder",x="Gender",y="Count")+theme_minimal()
+```
+```{r}
+sleep.disorder_gender_table=table(data2$Sleep.Disorder,data2$Gender)
+table2<- as.data.frame(sleep.disorder_gender_table)
+colnames(table2)<- c("Sleep.Disorder","Gender","Count")
+table2
+```
+## occupation-quality of sleep
+
+```{r}
+ggplot(data=data2)+geom_bar(mapping=aes(x=Occupation ,fill=Quality.of.Sleep),position="dodge")+
+labs(title="Quality of sleep with job positions ",x="Job position",y="Count")+theme_minimal()
+```
+```{r}
+quality.of.sleep_occupation_table=table(data2$Quality.of.Sleep,data2$Occupation)
+table2<- as.data.frame(quality.of.sleep_occupation_table)
+colnames(table2)<- c("Quality.of.Sleep","Occupation","Count")
+table2
+```
+## gender-quality of sleep
+
+```{r}
+ggplot(data=data2)+geom_bar(mapping=aes(x=Gender ,fill=Quality.of.Sleep),position="dodge")+
+labs(title="Quality of sleep with Gender ",x="Gender",y="Count")+theme_minimal()
+```
+```{r}
+quality.of.sleep_gender_table=table(data2$Quality.of.Sleep,data2$Gender)
+table2<- as.data.frame(quality.of.sleep_gender_table)
+colnames(table2)<- c("Quality.of.Sleep","Gender","Count")
+table2
+```
+
+
+### NUMERICAL
+```{r}
+summary(data2$Age)
+summary(data2$Physical.Activity.Level)
+summary(data2$Sleep.Duration)
+```
+
+
+## age-histogram
+```{r}
+ggplot(data=data2)+geom_histogram(mapping=aes(x=Age ),binwidth = 4,color="black",fill="blue")
+
+```
+```{r}
+Age_counts <- table(data2$Age)
+chart_data <- data.frame(Age = names(Age_counts), count = Age_counts)
+chart_data
+```
+## physical activity level-histogram
+```{r}
+ggplot(data=data2)+geom_histogram(mapping=aes(x=Physical.Activity.Level),binwidth = 8,color="black",fill="green")
+
+```
+```{r}
+Physical.Activity.Level_counts <- table(data2$Physical.Activity.Level)
+chart_data <- data.frame(Physical.Activity.Level = names(Physical.Activity.Level_counts), count = Physical.Activity.Level_counts)
+chart_data
+```
+## sleep duration-histogram
+```{r}
+ggplot(data=data2)+geom_histogram(mapping=aes(x=Sleep.Duration),binwidth = 0.4,color="black",fill="light blue")
+```
+```{r}
+Sleep.Duration_counts <- table(data2$Sleep.Duration)
+chart_data <- data.frame(Sleep.Duration = names(Sleep.Duration_counts), count = Sleep.Duration_counts)
+chart_data
+```
+## gender-sleep duration boxplot
+```{r}
+ggplot(data=data2)+geom_boxplot(mapping=aes(x=Gender,y=Sleep.Duration,fill=Gender,alpha=0.5))+
+labs(title="Sleep Duration of Male and Female",x="Gender",y="Sleep Duration")+theme_grey()
+```
+
+## occupation-sleep duration boxplot
+```{r}
+ggplot(data=data2)+geom_boxplot(mapping=aes(x=Occupation,y=Sleep.Duration,fill=Occupation,alpha=0.5))+
+labs(title="Sleep Duration according to different Occupations",x="Occupation",y="Sleep Duration")+theme_grey()
+```
+
+## sleep disorder-sleep duration boxplot
+```{r}
+ggplot(data=data2)+geom_boxplot(mapping=aes(x=Sleep.Disorder,y=Sleep.Duration,fill=Sleep.Disorder,alpha=0.5))+
+labs(title="Sleep Duration according to different Sleep disorders",x="Sleep.Disordern",y="Sleep Duration")+theme_grey()
+```
+## quality of sleep-physical activity level
+```{r}
+ggplot(data=data2)+geom_boxplot(mapping=aes(x=Quality.of.Sleep,y=Physical.Activity.Level,fill=Quality.of.Sleep,alpha=0.5))+
+labs(title="Physical Activity level according to Quality of Sleep",x="Quality.of.Sleep",y="Physical.Activity.Level")+theme_grey()
+```
+
+## scatterplot
+## Sleep duartion- physical activity level
+```{r}
+plot(data2$Sleep.Duration, data2$Physical.Activity.Level, main="scatterplot",xlab="Sleep.Duration", ylab="Physical.Activity.Level",pch=5)
+```
+
+## age- physical activity level
+```{r}
+plot(data2$Age, data2$Physical.Activity.Level, main="scatterplot",xlab="Age", ylab="Physical.Activity.Level",pch=5)
+```
+
+## sleep duration-age
+```{r}
+plot(data2$Sleep.Duration, data2$Age, main="scatterplot",xlab="Sleep.Duration", ylab="Age",pch=5)
+```
+
+
+
+### STATISTICAL TESTS
+## multiple linear regression
+
+```{r}
+sleep_lm<-lm(data2$Sleep.Duration~data2$Age+data2$Physical.Activity.Level+data2$Stress.Level+data2$Gender+data2$Occupation)
+sleep_lm
+```
+
+## y=( 0.006384*Age)+(0.007784*Physical.Activity.Level)+(-0.372541*Stress.Level)+(-0.106461*GenderMale)+(0.819704*OccupationDoctor)+(0.664580*OccupationEngineer)+(0.476361*OccupationLawyer)+(-0.075503*OccupationManager)+(0.064650*OccupationNurse)+(0.451708*OccupationSales Representative)+(0.366380*OccupationSalesperson)+(-0.048029*OccupationScientist)+(0.395767*OccupationSoftware Engineer)+(-0.355270*OccupationTeacher) + 8.122807 
+
+```{r}
+summary(sleep_lm)
+```
+
+# H0:There is no significant linear relationship between Gender, Age, Occupation, Stress level and physical activity level and Sleep duration.
+
+# H1:There is a significant relationship between Gender, Age, Occupation, Stress level and physical activity level and Sleep duration.
+
+# as P value=2.2e-16 is less than 0.05 we reject H0 and accept H1
+
+
+
+## chi-squard test
+```{r}
+test <- chisq.test(data2$Gender, data2$Sleep.Disorder)
+test
+```
+
+# HO: There is no significant association between Gender and Sleep disorder.
+
+# H1:There is a significant association between Gender and Sleep disorder.
+
+# as p-value =1.613e-12 less than 0.05 so we reject HO and accept H1
+
+
+## anova test
+```{r}
+one.way<-aov(Physical.Activity.Level~Quality.of.Sleep,data=data2)
+summary(one.way)
+```
+
+# HO:There is no significant differences between the means of Quality of sleep and Physical activity level.
+
+# H1:There is at least one significant difference between the means of Quality of sleep and Physical activity level.
+
+# as p value=0.000175 is less than 0.05 we reject H0 and accept H1
